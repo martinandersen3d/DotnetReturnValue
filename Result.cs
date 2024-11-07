@@ -1,7 +1,7 @@
 // See https://aka.ms/new-console-template for more information
 using System.Text.Json.Serialization;
 
-namespace ResultValue;
+namespace ResultReferenceType;
 
 public readonly struct Result<T>
 {
@@ -104,7 +104,27 @@ public readonly struct Result<T>
     /// </summary>
     /// <param name="ex">The exception to convert into an error <see cref="Result{T}"/>.</param>
     public static implicit operator Result<T>(Exception ex) => Error(ex);
-    
+
+    /// <summary>
+    /// Implicitly converts a <see cref="Result{T}"/> into a <see cref="bool"/> based on its <see cref="Result{T}.IsSuccess"/> property.
+    /// This allows directly using a <see cref="Result{T}"/> instance in conditional statements like <c>if</c> or <c>while</c>, 
+    /// where the result is treated as <c>true</c> if <see cref="Result{T}.IsSuccess"/> is <c>true</c>, and <c>false</c> otherwise.
+    /// <code>
+    /// var result = Result<int>.Success(42);
+    /// if (result) 
+    /// {
+    ///     Console.WriteLine("Success!");  // This will execute
+    /// }
+    /// else 
+    /// {
+    ///     Console.WriteLine("Error!");
+    /// }
+    /// </code>
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}"/> to convert into a <see cref="bool"/>.</param>
+    /// <returns><c>true</c> if the result is successful, otherwise <c>false</c>.</returns>
+    public static implicit operator bool(Result<T> result) => result.IsSuccess;
+
 }
 
 /// <summary>
